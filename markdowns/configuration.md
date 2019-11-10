@@ -1,27 +1,26 @@
-# Getting Started with SYCL
+# Iniciando com SYCL
 
-## How does SYCL work?
+## Como o SYCL funciona?
 
-A SYCL implementation consists of two main components; a SYCL device compiler, which compiles your code for OpenCL devices, and a SYCL runtime library which provides the high level interface writing SYCL applications and the runtime for executing your device code on OpenCL devices.
+Uma implementação do SYCL consiste em dois componentes principais; um compilador SYCL, que compila seu código para dispositivos OpenCL, e uma biblioteca runtime, os quais fornecem uma interface de alto nível para escrever aplicações SYCL
 
-## What does SYCL run on?
+## No que o SYCL é executado?
 
-SYCL can target a wide range of OpenCL devices on any given system such as multi-core CPUs, GPU, FPGA, DSPs and other kinds of accelerators and specialised processors. For example ComputeCpp, a SYCL 1.2.1 conformant implementation, enables SYCL code to be run on Intel, AMD, ARM, Renesas, NVIDIA and in the future Imagination processors.
+SYCL pode ser executado em uma grande gama de dispositivos OpenCL em qualquer sistema dado como: multi CPUs, GPU, FPGAs, DSPs e outros tipos de acelerados e processadores especializados. Por exemplo, a implementação que vamos utilizar neste tutorial permite que SYCL seja executado em Intel, AMD, ARM, Renesas e NVIDIA.
 
-The ComputeCpp package provides a tool called `computecpp_info`, which can be used for a variety of things, but primarily for detecting supported devices on your system that can be used by ComputeCpp.
+O pacote `computecpp` fornece algumas ferramentas que vão ser utilizadas, como `computecpp_info` que checa se o dispotivo possui suporte para a compilação e execução das aplicações.
 
-For the purposes of demonstration we can run `computecpp_info` here to display the OpenCL device(s) available to this tutorial.
+A instalação e configuração do `computecpp` pode ser um pouco demorada dependendo dos dispositivos que você possui, por isso vamos utilizar este docker já configurado para a execução das aplicações.
 
-Hit the "Run" button to see what the output looks like.
+Para fins de demonstração vamos executar aqui e analisar o output:
 
-@[ComputeCpp Info]({"command": "sh /project/target/validate.sh"})
+@[computecpp_info]({"command": "sh /project/target/validate.sh"})
 
-* Note that this tutorial is running in a cloud instance and so is using an Intel CPU, no GPU or accelerator processor is available.
+* Este tutorial será inteiramente feito CPU Intel.
 
-The key line to check is this one
+O comando `computecpp_info` retorna algumas informações, mas o que importa para nós é a seguinte linha:
 
 `Device is supported                     : YES - Tested internally by Codeplay Software Ltd.`
 
-As you can see from the output of computecpp_info the only supported device is the "host" which is the Intel CPU. Although it is unlikely to offer any performance improvements in the absence of a GPU it enables us to run our SYCL code using ComputeCpp.
-
+Podemos ver também que o único device suportado é o "host" que é a CPU Intel;
 
