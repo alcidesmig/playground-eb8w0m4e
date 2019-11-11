@@ -1,9 +1,9 @@
-title: Introduction to SYCL
+title: Introdução ao SYCL
 plan:
-- title: Introduction
-  description: This section introduces heterogeneous computing.
+- title: Tutorial
+  description: Vamos aprender programação heterogênea
   plan:
-  - title: Introduction to SYCL
+  - title: Playground
     statement: markdowns/intro.md
   - title: Iniciando
     statement: markdowns/configuration.md
