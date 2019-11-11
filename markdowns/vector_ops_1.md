@@ -1,41 +1,41 @@
 # Configuração do Host e SYCL Queue
 
-This exercise is a slightly modified version of the vector addition we did in the previous example. You are going to take over in this one and complete the code for this application by yourself. Instructions are provided on each step of completion, so you should be able to do it. Let's begin. 
+Esse exercício é uma versão levemente modificada do adição de vetores que fizemos no exemplo passado. Nós vamos completar o código juntos desta vez.
 
-> By now, you should know that you need to include the SYCL header file in order to use SYCL in your application. It is already included at the top of the source file - `#include <CL/sycl.hpp>`.
+> Não esqueça de incluir - `#include <CL/sycl.hpp>`.
 
-## Host Setup
+## Configuração do Host
 
-### Description
+### Descrição
 
-The first step is to initialize the vector data on the host.
+O primeiro passo é inicializar o vetor com os dados no host
 
-We will be using:
+Nós estaremos usando:
 
 ```cpp
 cl::sycl::float4
 ```
 
-which is a type alias for
+O que é um alias para:
 
 ```cpp
 cl::sycl::vec<float, 4>
 ```
 
-It is a SYCL type struct that provides OpenCL vector functionality for host and device.
+É um tipo do SYCL que fornece funcionalidades de um vetor OpenCL para o host e o dispositivo.
 
-### Task
+### Tarefa
 
-Define 2 input vectors and 1 output vector.
+Defina 2 vetores de entrada e 1 vetor de saída
 
-Inputs:
+Entradas:
  - vector `a`: `{1.0, 1.0, 1.0, 1.0}`
  - vector `b`: `{1.0, 1.0, 1.0, 1.0}`
 
-Output:
+Saída:
 - vector `c`: `{0.0, 0.0, 0.0, 0.0}`
 
-Location in the source code:
+Complete no código a configuração de memória do host:
 
 ```cpp
 // <<Setup host memory>>
@@ -51,25 +51,26 @@ sycl::float4 a = { 1.0f, 1.0f, 1.0f, 1.0f }; // input 1
 </p>
 </details>
 
-## Initialize SYCL Queue
+## Inicializando a SYCL Queue
 
-### Description
+### Descrição
 
-SYCL queue is constructed from the selection of a supported device.
+SYCL queue é construída de uma seleção de um dispotivo suportado.
 
-The system is set to always force the execution of the SYCL examples on the CPU device. Thus, the default selector will select the CPU because of its heuristics to identify the supported platforms and device on our system.
+O sistema é configurado para sempre forçar a execução de exemplos SYCL na CPU. De qualquer forma, o seletor padrão selecionaria
+a CPU por causa das heurísticas para identificar as plataformas suportadas e os dispositivos no nosso sistema.
 
-### Task
+### Tarefa
 
-Initialize a SYCL queue with either a CPU or default device selector.
+Inicialize a SYCL queue com a CPU ou com o seletor de dispositivo padrão.
 
-Location in the source code:
+Localização no código fonte:
 
 ```cpp
 // <<Setup SYCL queue>>
 ```
 
-<details><summary>Hint</summary>
+<details><summary>Dica</summary>
 <p>
 
 ```cpp
