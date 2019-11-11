@@ -37,6 +37,7 @@ Na maioria dos sistemas, o host e o dispositivo não compartilham memória físi
 Para esse fim, existem buffers SYCL. A classe <T, dims> do buffer é genérica sobre o tipo de elemento e o número de dimensões, que podem ser uma, duas ou três. Quando passado um ponteiro bruto, como neste caso, o construtor buffer (T * ptr, tamanho do intervalo) assume a propriedade da memória pela qual foi passado. Isso significa que absolutamente não podemos usar essa memória enquanto o buffer existe, e é por isso que começamos um escopo de C ++. No final de seu escopo, os buffers serão destruídos e a memória retornada ao usuário. O argumento size é um objeto de intervalo <dims>, que precisa ter o mesmo número de dimensões que o buffer e é inicializado com o número de elementos em cada dimensão. Aqui, temos uma dimensão com um elemento.
 
 Os buffers não estão associados a uma fila ou contexto específico, portanto, eles são capazes de manipular dados de forma transparente entre vários dispositivos. Eles também não exigem informações de leitura / gravação, pois isso é especificado por operação.
+
 ```
 sycl::buffer<sycl::float4, 1> a_sycl(&a, sycl::range<1>(1));
 sycl::buffer<sycl::float4, 1> b_sycl(&b, sycl::range<1>(1));
@@ -47,15 +48,14 @@ sycl::buffer<sycl::float4, 1> c_sycl(&c, sycl::range<1>(1));
 
 ### Criando Um Grupo De Comandos
 
-The whole thing is technically a single function call to `queue::submit`. `submit` accepts a function object parameter, which encapsulates a command group. For this purpose, the function object accepts a command group handler constructed by the SYCL runtime and handed to us as the argument. All operations using a given command group handler are part of the same command group.
+Tecnicamente uma única chamada de função para `queue :: submit`. `submit` aceita um parâmetro de objeto de função, que encapsula um grupo de comandos. Para esse propósito, o objeto da função aceita um manipulador de grupo de comandos construído no tempo de execução. Todas as operações usando um determinado manipulador de grupo de comandos fazem parte do mesmo grupo de comandos.
 
 `myQueue.submit([&](cl::sycl::handler &cgh)`
 
-A command group is a way to encapsulate a device-side operation and all its data dependencies in a single object by grouping all the related commands (function calls). Effectively, what this achieves is preventing data race conditions, resource leaking and other problems by letting the SYCL runtime know the prerequisites for executing device-side code correctly.
 
 ### Data Accessors
 
-In our command group, we first setup accessors. In general, these objects define the inputs and outputs of a device-side operation. The accessors also provide access to various forms of memory. In this case, they allow us to access the memory owned by the buffers created earlier. We passed ownership of our data to the buffer, so we can no longer use the float4 objects, and accessors are the only way to access data in buffer objects.
+No nosso grupo de comandos, nós primeiro configuramos os acessors. No geral, esses objetos definem as entradas e as saídas de uma operação device-side. Os accessors também provém acesso a várias formas de memória. Nesse caso, eles permitem que nós acessemos a memória possúida pelas buffers criados anteriormente. Passamos a propriedade de nossos dados para o buffer, para que não possamos mais usar os objetos float4, e os acessadores são a única maneira de acessar dados em objetos de buffer.
 
 ```
 auto a_acc = a_sycl.get_access<sycl::access::mode::read>(cgh);
@@ -63,13 +63,11 @@ auto b_acc = b_sycl.get_access<sycl::access::mode::read>(cgh);
 auto c_acc = c_sycl.get_access<sycl::access::mode::discard_write>(cgh);
 ```
 
-The buffer::get_access(handler&) method takes an access mode argument. We use access::mode::read for the arguments and access::mode::discard_write for the result. discard_write can be used whenever we write to the whole buffer and do not care about its previous contents. Since it will be overwritten entirely, we can discard whatever was there before.
+O método buffer::get_access(handler&) usa um argumento do modo de acesso. Usamos access::mode::read para os argumentos e access:: mode::discard_write para o resultado. discard_write pode ser usado sempre que escrevemos em todo o buffer e não nos importamos com o conteúdo anterior. Como ele será totalmente sobrescrito, podemos descartar o que havia antes.
 
-The second parameter is the type of memory we want to access the data from. We will see the available types of memory in the section on memory accesses. For now we use the default value.
+### Definindo uma Kernel Function
 
-### Defining a Kernel Function
-
-In SYCL there are various ways to define a kernel function that will execute on a device depending on the kind of parallelism you want and the different features you require. The simplest of these is the `cl::sycl::handler::single_task` function, which takes a single parameter, being a C++ function object and executes that function object exactly once on the device. The C++ function object does not take any parameters, however it is important to note that if the function object is a lambda it must capture by value and if it is a struct or class it must define all members as value members.
+No SYCL, existem várias maneiras de definir uma kernel function que será executada em um dispositivo, dependendo do tipo de paralelismo desejado e dos diferentes recursos necessários. A mais simples delas é a função `cl::sycl::handler::single_task`, que usa um único parâmetro, sendo um objeto de função C ++ e executa esse objeto de função exatamente uma vez no dispositivo. O objeto da função C++ não aceita nenhum parâmetro, no entanto, é importante observar que, se o objeto da função for um lambda, ele deverá capturar por valor e, se for uma estrutura ou classe, deverá definir todos os membros como membros do valor.
 
 ```
    cgh.single_task<class vector_addition>([=] () {
@@ -78,9 +76,10 @@ In SYCL there are various ways to define a kernel function that will execute on 
 });
 ```
 
-## Cleaning Up
+## Limpando
 
-One of the features of SYCL is that it makes use of C++ RAII (resource aquisition is initialisation), meaning that there is no explicit cleanup and everything is done via the SYCL object destructors.
+Um dos features do SYCL é a utilização de C++ RAII (resource aquisition is initialisation), significando que não há limpeza explícita e tudo é feito por meio dos destruidores de objetos SYCL.
+   
 ```
 {
    ...
@@ -89,4 +88,4 @@ One of the features of SYCL is that it makes use of C++ RAII (resource aquisitio
 
 # Run it!
 
-@[Hello World from SYCL]({"stubs": ["src/exercises/hello_world.cpp"],"command": "sh /project/target/run.sh hello_world", "layout": "aside"})
+@[Hello World]({"stubs": ["src/exercises/hello_world.cpp"],"command": "sh /project/target/run.sh hello_world", "layout": "aside"})
