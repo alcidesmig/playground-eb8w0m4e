@@ -1,4 +1,4 @@
-# Host Setup and SYCL Queue
+# Configuração do Host e SYCL Queue
 
 This exercise is a slightly modified version of the vector addition we did in the previous example. You are going to take over in this one and complete the code for this application by yourself. Instructions are provided on each step of completion, so you should be able to do it. Let's begin. 
 
