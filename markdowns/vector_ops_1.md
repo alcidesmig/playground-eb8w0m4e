@@ -83,4 +83,4 @@ sycl::queue myQueue(sycl::default_selector{});
 
 # Run it!
 
-@[Hello World from SYCL]({"stubs": ["src/exercises/vector-ops_1.cpp"],"command": "sh /project/target/run.sh vector-ops_1", "layout": "aside"})
+@[Hello World from SYCL]({"stubs": ["src/exercises/vector-ops_1.cpp"],"command": "sh /project/target/run.sh vector-ops_1"})
